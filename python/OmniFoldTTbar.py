@@ -364,6 +364,8 @@ class OmniFoldTTbar():
         """
         Run unfolding
         """
+        
+        pretrain = True # TODO: eventually replace this with parameter
 
         # preprocess data and weights
         X_data, X_sim, X_gen = self._get_input_arrays()
@@ -463,7 +465,8 @@ class OmniFoldTTbar():
                 plot = plot_status and ir==0, # only make plots for the first run
                 batch_size = batch_size,
                 ax_step1 = ax1,
-                ax_step2 = ax2
+                ax_step2 = ax2,
+                pretrain = pretrain
             )
 
             if plot_status:

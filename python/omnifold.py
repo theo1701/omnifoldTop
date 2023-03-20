@@ -116,6 +116,7 @@ def omnifold(
     plot=False, # If True, plot training history and make other status plots
     ax_step1=None,
     ax_step2=None,
+    pretrain = None, # pretrain mode
     # Model training parameters
     batch_size=256,
     epochs=100,
