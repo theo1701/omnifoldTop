@@ -43,3 +43,9 @@ class PretrainMode(ModelSaveLoader):
             return load_model_dir, save_model_dir
     def get_epoch_limit(self):
         return self.epoch_limit
+    
+def initializeSaveLoader(type, load_model_dir, save_model_dir, epoch_limit, create_mode):
+    if type == "training":
+        return NormalTrainingMode(load_model_dir, save_model_dir)
+    elif type == "pretrain":
+        return PretrainMode(load_model_dir, save_model_dir, epoch_limit, create_mode)

@@ -15,6 +15,7 @@ from make_histograms import make_histograms_from_unfolder
 import preprocessor
 import modelUtils
 import lrscheduler
+from modelSaveLoad import initializeSaveLoader
 
 def unfold(**parsed_args):
 
@@ -126,6 +127,13 @@ def unfold(**parsed_args):
     #################
 
     lrscheduler.init_lr_scheduler(parsed_args["lrscheduler_config"])
+
+    #################
+    # Config Pretrain mode
+    #################
+
+    pretrain = initializeSaveLoader(parsed_args["pretrain_mode"], parsed_args["load_models"],
+                                    "", parsed_args["epoch_limit"], parsed_args["pretrain_create"])
 
     #################
     # Run unfolding
@@ -306,6 +314,9 @@ def getArgsParser(arguments_list=None, print_help=False):
     parser.add_argument('--toydata', action='store_true', help="If True, use toy data")
     parser.add_argument('--exclude-flow', action='store_true',
                         help="If True, exclude events in overflow and underflow bins given a binning configuration")
+    parser.add_argument('--pretrain-mode', type=str, default="training", help="whether to use or create pretrained model, default is normal training mode")
+    parser.add_argument('--epoch-limit', type=int, default=2, help="number of epochs to stop for pretraining mode")
+    parser.add_argument('--pretrain-create', action='store_true', help="If True, create pretrain model")
 
     if print_help:
         parser.print_help()
