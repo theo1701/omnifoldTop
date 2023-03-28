@@ -132,8 +132,15 @@ def unfold(**parsed_args):
     # Config Pretrain mode
     #################
 
-    pretrain = initializeSaveLoader(parsed_args["pretrain_mode"], parsed_args["load_models"],
-                                    "", parsed_args["epoch_limit"], parsed_args["pretrain_create"])
+    
+    if parsed_args["save_models_to"] == "":
+        pretrain = initializeSaveLoader(parsed_args["pretrain_mode"], parsed_args["load_models"],
+                                        parsed_args["outputdir"], parsed_args["epoch_limit"], parsed_args["pretrain_create"],
+                                        parsed_args["save_models"])
+    else:
+        pretrain = initializeSaveLoader(parsed_args["pretrain_mode"], parsed_args["load_models"],
+                                        parsed_args["save_models_to"], parsed_args["epoch_limit"], parsed_args["pretrain_create"],
+                                        parsed_args["save_models"])
 
     #################
     # Run unfolding
@@ -153,6 +160,7 @@ def unfold(**parsed_args):
         unfolder.run(
             niterations = parsed_args['iterations'],
             resample_data = parsed_args['resample_data'],
+            pretrain = pretrain,
             nruns = parsed_args['nruns'],
             resample_everyrun = parsed_args['resample_everyrun'],
             model_type = parsed_args['model_name'],
@@ -317,6 +325,8 @@ def getArgsParser(arguments_list=None, print_help=False):
     parser.add_argument('--pretrain-mode', type=str, default="training", help="whether to use or create pretrained model, default is normal training mode")
     parser.add_argument('--epoch-limit', type=int, default=2, help="number of epochs to stop for pretraining mode")
     parser.add_argument('--pretrain-create', action='store_true', help="If True, create pretrain model")
+    parser.add_argument('--save-models', default=True, action='store_false', help="If true, save models")
+    parser.add_argument('--save-models-to', default="", type=str, help="folder to save model to, default is to outputdir")
 
     if print_help:
         parser.print_help()

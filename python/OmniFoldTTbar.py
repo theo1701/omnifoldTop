@@ -13,6 +13,7 @@ from datahandler_root import DataHandlerROOT
 from omnifold import omnifold
 import modelUtils
 import preprocessor
+from modelSaveLoad import NormalTrainingMode
 
 import logging
 logger = logging.getLogger('OmniFoldTTbar')
@@ -359,13 +360,12 @@ class OmniFoldTTbar():
         load_previous_iteration=True,
         load_models_from='',
         batch_size=256,
-        plot_status=False # if True, make extra plots for monitoring/debugging
+        plot_status=False, # if True, make extra plots for monitoring/debugging
+        pretrain=NormalTrainingMode('','',True) # no loading no saving by default
     ):
         """
         Run unfolding
         """
-        
-        pretrain = True # TODO: eventually replace this with parameter
 
         # preprocess data and weights
         X_data, X_sim, X_gen = self._get_input_arrays()
@@ -438,15 +438,18 @@ class OmniFoldTTbar():
             logger.info(f"Run #{ir}")
 
             # model directory
-            if load_models_from:
-                load_model_dir = os.path.join(load_models_from, "Models", f"run{ir}")
-                save_model_dir = '' # no need too save the model again
-            else:
-                load_model_dir = ''
-                if save_models and self.outdir:
-                    save_model_dir = os.path.join(self.outdir, "Models", f"run{ir}")
-                else:
-                    save_model_dir = ''
+
+            load_model_dir, save_model_dir = pretrain.get_dirs(ir)
+
+            # if load_models_from:
+            #     load_model_dir = os.path.join(load_models_from, "Models", f"run{ir}")
+            #     save_model_dir = '' # no need too save the model again
+            # else:
+            #     load_model_dir = ''
+            #     if save_models and self.outdir:
+            #         save_model_dir = os.path.join(self.outdir, "Models", f"run{ir}")
+            #     else:
+            #         save_model_dir = ''
 
             if resample_data and resample_everyrun:
                 # fluctuate data weights
@@ -465,8 +468,7 @@ class OmniFoldTTbar():
                 plot = plot_status and ir==0, # only make plots for the first run
                 batch_size = batch_size,
                 ax_step1 = ax1,
-                ax_step2 = ax2,
-                pretrain = pretrain
+                ax_step2 = ax2
             )
 
             if plot_status:

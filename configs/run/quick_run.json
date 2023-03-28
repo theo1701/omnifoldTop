@@ -9,6 +9,6 @@
   "plot_verbosity" : 3,
   "outputdir" : "output_tmp",
   "reweight_data" : "linear_th_pt",
-  "nruns": 6,
-  "parallel_models": 5
+  "save_models" : true,
+  "save_models_to":"modelplace"
 }

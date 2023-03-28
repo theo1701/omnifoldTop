@@ -10,10 +10,13 @@ class ModelSaveLoader():
 class NormalTrainingMode(ModelSaveLoader):
     def __init__(self, load_model_dir, save_model_dir):
         self.save_models = False
-        return super().init(load_model_dir, save_model_dir)
+        return super().__init__(load_model_dir, save_model_dir)
+    def __init__(self, load_model_dir, save_model_dir, save_models):
+        self.save_models = True
+        super().__init__(load_model_dir, save_model_dir)
     def get_dirs(self, ir):
-        if self.load_models_from:
-            load_model_dir = os.path.join(self.load_models_from, "Models", f"run{ir}")
+        if self.load_model_dir:
+            load_model_dir = os.path.join(self.load_model_dir, "Models", f"run{ir}")
             save_model_dir = '' # no need too save the model again
         else:
             load_model_dir = ''
@@ -44,8 +47,8 @@ class PretrainMode(ModelSaveLoader):
     def get_epoch_limit(self):
         return self.epoch_limit
     
-def initializeSaveLoader(type, load_model_dir, save_model_dir, epoch_limit, create_mode):
+def initializeSaveLoader(type, load_model_dir, save_model_dir, epoch_limit, create_mode, save_models):
     if type == "training":
-        return NormalTrainingMode(load_model_dir, save_model_dir)
+        return NormalTrainingMode(load_model_dir, save_model_dir, save_models)
     elif type == "pretrain":
         return PretrainMode(load_model_dir, save_model_dir, epoch_limit, create_mode)
