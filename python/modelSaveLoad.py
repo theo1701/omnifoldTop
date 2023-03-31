@@ -6,6 +6,8 @@ class ModelSaveLoader():
         self.save_model_dir = save_model_dir
     def get_dirs(self, ir):
         return self.load_model_dir, self.save_model_dir
+    def partial(self):
+        return False
     
 class NormalTrainingMode(ModelSaveLoader):
     def __init__(self, load_model_dir, save_model_dir):
@@ -46,6 +48,8 @@ class PretrainMode(ModelSaveLoader):
             return load_model_dir, save_model_dir
     def get_epoch_limit(self):
         return self.epoch_limit
+    def partial(self):
+        return True
     
 def initializeSaveLoader(type, load_model_dir, save_model_dir, epoch_limit, create_mode, save_models):
     if type == "training":

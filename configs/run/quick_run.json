@@ -7,6 +7,5 @@
   "normalize" : true,
   "batch_size" : 20000,
   "plot_verbosity" : 3,
-  "outputdir" : "output_tmp",
-  "reweight_data" : "linear_th_pt"
+  "outputdir" : "output_tmp"
 }

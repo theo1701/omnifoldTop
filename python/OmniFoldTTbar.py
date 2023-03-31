@@ -440,6 +440,7 @@ class OmniFoldTTbar():
             # model directory
 
             load_model_dir, save_model_dir = pretrain.get_dirs(ir)
+            print(load_model_dir, save_model_dir)
 
             # if load_models_from:
             #     load_model_dir = os.path.join(load_models_from, "Models", f"run{ir}")
@@ -456,20 +457,38 @@ class OmniFoldTTbar():
                 w_data, w_sim, w_gen = self._get_event_weights(resample=True)
 
             # omnifold
-            self.unfolded_weights[ir*modelUtils.n_models_in_parallel:(ir+1)*modelUtils.n_models_in_parallel,:,:] = omnifold(
-                X_data, X_sim, X_gen,
-                w_data, w_sim, w_gen,
-                passcut_data, passcut_sim, passcut_gen,
-                niterations = niterations,
-                model_type = model_type,
-                save_models_to = save_model_dir,
-                load_models_from = load_model_dir,
-                start_from_previous_iter=load_previous_iteration,
-                plot = plot_status and ir==0, # only make plots for the first run
-                batch_size = batch_size,
-                ax_step1 = ax1,
-                ax_step2 = ax2
-            )
+            if pretrain.partial():
+                self.unfolded_weights[ir*modelUtils.n_models_in_parallel:(ir+1)*modelUtils.n_models_in_parallel,:,:] = omnifold(
+                    X_data, X_sim, X_gen,
+                    w_data, w_sim, w_gen,
+                    passcut_data, passcut_sim, passcut_gen,
+                    niterations = niterations,
+                    model_type = model_type,
+                    save_models_to = save_model_dir,
+                    load_models_from = load_model_dir,
+                    start_from_previous_iter=load_previous_iteration,
+                    plot = plot_status and ir==0, # only make plots for the first run
+                    batch_size = batch_size,
+                    ax_step1 = ax1,
+                    ax_step2 = ax2,
+                    epochs = pretrain.get_epoch_limit()
+                )
+            else:
+                self.unfolded_weights[ir*modelUtils.n_models_in_parallel:(ir+1)*modelUtils.n_models_in_parallel,:,:] = omnifold(
+                    X_data, X_sim, X_gen,
+                    w_data, w_sim, w_gen,
+                    passcut_data, passcut_sim, passcut_gen,
+                    niterations = niterations,
+                    model_type = model_type,
+                    save_models_to = save_model_dir,
+                    load_models_from = load_model_dir,
+                    start_from_previous_iter=load_previous_iteration,
+                    plot = plot_status and ir==0, # only make plots for the first run
+                    batch_size = batch_size,
+                    ax_step1 = ax1,
+                    ax_step2 = ax2,
+                )
+
 
             if plot_status:
                 logger.info("Plot model training history")
