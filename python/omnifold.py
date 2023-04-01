@@ -116,7 +116,7 @@ def omnifold(
     plot=False, # If True, plot training history and make other status plots
     ax_step1=None,
     ax_step2=None,
-    pretrain = None, # pretrain mode
+    continue_from_pretrain = False, # pretrain mode
     # Model training parameters
     batch_size=256,
     epochs=100,
@@ -208,9 +208,11 @@ def omnifold(
             model_type, X_step1.shape[1:], i, "model_step1",
             save_models_to, load_models_from, start_from_previous_iter)
 
-        if load_models_from:
+        if load_models_from and not continue_from_pretrain:
             logger.info("Use trained model for reweighting")
         else: # train model
+            if continue_from_pretrain:
+                logger.info("continue training from pretrained model")
             w_step1 = [np.concatenate([
                 w_data[passcut_data], (weights_push[j]*w_sim[j])[passcut_sim]
                 ]) for j in range(modelUtils.n_models_in_parallel)]

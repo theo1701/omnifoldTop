@@ -471,7 +471,8 @@ class OmniFoldTTbar():
                     batch_size = batch_size,
                     ax_step1 = ax1,
                     ax_step2 = ax2,
-                    epochs = pretrain.get_epoch_limit()
+                    epochs = pretrain.get_epoch_limit(),
+                    continue_from_pretrain = pretrain.continue_from_pretrain()
                 )
             else:
                 self.unfolded_weights[ir*modelUtils.n_models_in_parallel:(ir+1)*modelUtils.n_models_in_parallel,:,:] = omnifold(
@@ -487,6 +488,7 @@ class OmniFoldTTbar():
                     batch_size = batch_size,
                     ax_step1 = ax1,
                     ax_step2 = ax2,
+					continue_from_pretrain = pretrain.continue_from_pretrain()
                 )
 
 

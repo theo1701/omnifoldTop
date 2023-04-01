@@ -7,5 +7,9 @@
   "normalize" : true,
   "batch_size" : 20000,
   "plot_verbosity" : 3,
-  "outputdir" : "output_tmp"
+  "outputdir" : "output_tmp",
+  "pretrain_mode":"pretrain",
+  "epoch_limit":5,
+  "pretrain_create":true,
+  "save_models_to":"modelplace"
 }
